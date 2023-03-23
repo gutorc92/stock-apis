@@ -6,6 +6,9 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    volumes:
+    - ./init/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    - ./init/definitions.json:/etc/rabbitmq/definitions.json:ro
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: testando12

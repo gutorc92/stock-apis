@@ -8,22 +8,12 @@ from config import Config
 from flask_migrate import Migrate
 from flask_cors import CORS
 from app.extensions import db
+from app.stock import bp as stock_bp
+from app.main import bp as main_bp
+from app.ticket import bp as ticket_bp
 
-# create the extension
-
-# @app.route('/tickets', methods=['GET'])
-# def list_tickets():
-#     tickets = db.session.query(Ticket, Stock).join(Ticket, Ticket.stock_id == Stock.id).all()
-#     print(tickets)
-#     response = [
-#       {
-#           'ticket': ticket.ticket,
-#           'id': ticket.id,
-#           'name': stock.name
-#       } 
-#       for ticket, stock in tickets
-#     ]
-#     return {"count": len(response), "items": response}
+main_bp.register_blueprint(stock_bp)
+main_bp.register_blueprint(ticket_bp, url_prefix='/ticket')
 
 # @app.route('/stock/<id>/ticket', methods=['GET', 'POST'])
 # def ticket_list(id):
@@ -116,9 +106,7 @@ def create_app(config_class=Config):
 
   db.init_app(app)
   migrate = Migrate(app, db)
-  from app.stock import bp as stock_bp
-  from app.main import bp as main_bp
-  main_bp.register_blueprint(stock_bp)
+    
   app.register_blueprint(main_bp, url_prefix='/api')
 
   @app.route('/test/')

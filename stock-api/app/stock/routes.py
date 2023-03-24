@@ -10,10 +10,13 @@ def stock_list():
     if request.method == 'POST':
         if request.is_json:
             data = request.get_json()
-            new_stock = Stock(name=data['name'], base_ticket=data['base_ticket'])
+            new_stock = Stock(
+               name=data['name'],
+               base_ticket=data['base_ticket']
+            )
             db.session.add(new_stock)
             db.session.commit()
-            return {"message": f"car {new_stock.name} has been created successfully."}
+            return {"message": f"Stock {new_stock.name} has been created successfully."}
         else:
             return {"error": "The request payload is not in JSON format"}
 
@@ -32,7 +35,7 @@ def stock_list():
 @bp.route('/stock/<id>', methods=['GET', 'PATCH'])
 def stock(id):
     if request.method == 'GET':
-      stock = Stock.query.filter_by(Stock.id == id)
+      stock = Stock.query.filter_by(id = id).one()
       response = {
         'name': stock.name,
         'ticket': stock.base_ticket,
@@ -47,4 +50,4 @@ def stock(id):
         stock.name = data['name']
         stock.base_ticket = data['base_ticket']
         db.session.commit()
-        return {'result': True}
+        return {"message": f"Stock {stock.name} has been update successfully."}
